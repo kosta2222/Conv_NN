@@ -8,6 +8,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -23,19 +24,30 @@ public class JavaApplication1 {
     /**
      * @param args the command line arguments
      */
-    public  void apply() {
+    public BufferedImage apply(String fName) {
         // TODO code application logic here
         try {
-            File pathToFile = new File("image.png");
+            File pathToFile = new File(fName);
             image = ImageIO.read(pathToFile);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        int w=image.getWidth(null);
-        int h=image.getHeight(null);
-        normal=new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        Kernel kernel =new Kernel(3, 3, IDENTITY);
-        ConvolveOp co=new ConvolveOp(kernel);
-        current=co.filter(normal, null);
+        int w = image.getWidth(null);
+        int h = image.getHeight(null);
+        normal = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        Kernel kernel = new Kernel(3, 3, IDENTITY);
+        ConvolveOp co = new ConvolveOp(kernel);
+        current = co.filter(normal, null);
+        return current;
+    }
+    public byte[] getByteArray(BufferedImage image) {
+        ByteArrayOutputStream out=null;
+        try {
+            out = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", out);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return out.toByteArray();
     }
 }
